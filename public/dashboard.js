@@ -493,7 +493,6 @@ async function handleDonationSubmit(event) {
         currency: document.getElementById('donationCurrency').value,
         paymentMethod: document.getElementById('donationPaymentMethod').value,
         description: document.getElementById('donationDescription').value,
-        donor: currentUser?._id,
         transactionId: `txn_${Date.now()}_${Math.floor(Math.random()*100000)}`
     };
     

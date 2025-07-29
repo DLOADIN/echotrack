@@ -4,15 +4,40 @@ const router = express.Router();
 const auth = require('../middleware/auth');
 
 // Create donation
-router.post('/', auth, async (req, res, next) => {
+router.post('/', async (req, res, next) => {
     try {
-        const { amount, currency, description, paymentMethod, transactionId } = req.body;
-        const donor = req.user._id;
+        const { name, email, item, amount, currency, description, paymentMethod, transactionId } = req.body;
+        
         const donation = await Donation.create({
-            donor,
+            name,
+            email,
+            item,
             amount,
             currency,
-            description,
+            message: description, // Map description to message field
+            paymentMethod,
+            transactionId
+        });
+        res.status(201).json(donation);
+    } catch (err) {
+        next(err);
+    }
+});
+
+// Create donation with authentication (optional)
+router.post('/auth', auth, async (req, res, next) => {
+    try {
+        const { name, email, item, amount, currency, description, paymentMethod, transactionId } = req.body;
+        const donor = req.user._id;
+        
+        const donation = await Donation.create({
+            donor,
+            name,
+            email,
+            item,
+            amount,
+            currency,
+            message: description, // Map description to message field
             paymentMethod,
             transactionId
         });

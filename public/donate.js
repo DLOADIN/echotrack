@@ -14,13 +14,22 @@ document.getElementById("donationForm").addEventListener("submit", async functio
   const result = document.getElementById("donationResult");
 
   try {
-    // Remove login check and user fetch
-    const response = await fetch("/api/donations", {
+    // Use full API URL
+    const response = await fetch("http://localhost:5000/api/donations", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ name, email, item, description, amount, currency, paymentMethod, transactionId })
+      body: JSON.stringify({ 
+        name, 
+        email, 
+        item, 
+        description, 
+        amount, 
+        currency, 
+        paymentMethod, 
+        transactionId 
+      })
     });
     if (response.ok) {
       result.textContent = `Thank you, ${name}! Your donation of \"${item}\" has been received.`;

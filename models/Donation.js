@@ -5,6 +5,19 @@ const donationSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
+    // Public donation form fields
+    name: {
+        type: String,
+        trim: true
+    },
+    email: {
+        type: String,
+        trim: true
+    },
+    item: {
+        type: String,
+        trim: true
+    },
     amount: {
         type: Number,
         required: true,
