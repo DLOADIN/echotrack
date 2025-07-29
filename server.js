@@ -14,9 +14,24 @@ const app = express();
 
 // CORS configuration for production
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://echotrack.vercel.app', 'https://echotrack-frontend.vercel.app']
-    : ['http://localhost:3000', 'http://localhost:5000'],
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (process.env.NODE_ENV === 'production') {
+      // Allow any Vercel domain
+      if (origin.includes('vercel.app') || origin.includes('onrender.com')) {
+        return callback(null, true);
+      }
+    } else {
+      // Development - allow localhost
+      if (origin.includes('localhost')) {
+        return callback(null, true);
+      }
+    }
+    
+    callback(new Error('Not allowed by CORS'));
+  },
   credentials: true,
   optionsSuccessStatus: 200
 };
