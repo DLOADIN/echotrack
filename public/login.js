@@ -10,7 +10,12 @@ document.getElementById("loginForm").addEventListener("submit", async function (
   }
 
   try {
-    const res = await fetch("/api/users/login", {
+    // Use environment-based API URL
+    const apiUrl = window.location.hostname === 'localhost' 
+      ? 'http://localhost:5000/api/users/login'
+      : 'https://echotrack-backend-0ty9.onrender.com/api/users/login';
+    
+    const res = await fetch(apiUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password })

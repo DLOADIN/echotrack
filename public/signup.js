@@ -12,7 +12,12 @@ document.getElementById("signupForm").addEventListener("submit", async function 
   }
 
   try {
-    const response = await fetch("/api/users/signup", {
+    // Use environment-based API URL
+    const apiUrl = window.location.hostname === 'localhost' 
+      ? 'http://localhost:5000/api/users/signup'
+      : 'https://echotrack-backend-0ty9.onrender.com/api/users/signup';
+    
+    const response = await fetch(apiUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, password, role })
