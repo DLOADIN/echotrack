@@ -54,8 +54,23 @@ app.get('/', (req, res) => {
 // API routes
 app.use('/api/users', userRoutes); // keep for signup/login
 // Protect GET /api/users to only allow authenticated users
-app.get('/api/users/me', auth, (req, res) => {
-  res.json({ userId: req.user.userId, email: req.user.email, role: req.user.role });
+app.get('/api/users/me', auth, async (req, res) => {
+  try {
+    const User = require('./models/User');
+    const user = await User.findById(req.user.userId).select('name email role');
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.json({ 
+      _id: user._id,
+      name: user.name, 
+      email: user.email, 
+      role: user.role 
+    });
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    res.status(500).json({ error: 'Failed to fetch user data' });
+  }
 });
 app.use('/api/jobs', jobRoutes);
 app.use('/api/donations', donationRoutes);
