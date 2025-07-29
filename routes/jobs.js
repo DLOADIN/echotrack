@@ -1,11 +1,44 @@
 const express = require('express');
 const Job = require('../models/Job');
+const auth = require('../middleware/auth');
 const router = express.Router();
 
 // Create job
 router.post('/', async (req, res, next) => {
     try {
-        const job = await Job.create(req.body);
+        const { title, description, company, location, salary, requirements, employmentType } = req.body;
+        
+        const job = await Job.create({
+            title,
+            description,
+            company,
+            location,
+            salary,
+            requirements,
+            employmentType
+        });
+        res.status(201).json(job);
+    } catch (err) {
+        next(err);
+    }
+});
+
+// Create job with authentication (optional)
+router.post('/auth', auth, async (req, res, next) => {
+    try {
+        const { title, description, company, location, salary, requirements, employmentType } = req.body;
+        const postedBy = req.user._id;
+        
+        const job = await Job.create({
+            title,
+            description,
+            company,
+            location,
+            salary,
+            requirements,
+            employmentType,
+            postedBy
+        });
         res.status(201).json(job);
     } catch (err) {
         next(err);

@@ -36,8 +36,8 @@ const jobSchema = new mongoose.Schema({
     },
     postedBy: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
+        ref: 'User'
+        // Not required to allow anonymous job postings
     }
 }, {
     timestamps: true

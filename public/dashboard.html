@@ -287,6 +287,23 @@
                     <label>Location</label>
                     <input type="text" id="jobLocation" placeholder="Job location">
                 </div>
+                <div class="form-group">
+                    <label>Company</label>
+                    <input type="text" id="jobCompany" placeholder="Company name" required>
+                </div>
+                <div class="form-group">
+                    <label>Employment Type</label>
+                    <select id="jobEmploymentType" required>
+                        <option value="full-time">Full Time</option>
+                        <option value="part-time">Part Time</option>
+                        <option value="contract">Contract</option>
+                        <option value="internship">Internship</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Requirements</label>
+                    <textarea id="jobRequirements" placeholder="Comma-separated requirements"></textarea>
+                </div>
                 <button type="submit" class="btn-primary">Post Job</button>
             </form>
         </div>

@@ -375,6 +375,8 @@ function displayJobsTable(jobs) {
             <thead>
                 <tr>
                     <th>Title</th>
+                    <th>Company</th>
+                    <th>Location</th>
                     <th>Posted By</th>
                     <th>Status</th>
                     <th>Date</th>
@@ -385,7 +387,9 @@ function displayJobsTable(jobs) {
                 ${jobs.map(job => `
                     <tr>
                         <td>${job.title}</td>
-                        <td>${job.postedBy?.name || 'Unknown'}</td>
+                        <td>${job.company}</td>
+                        <td>${job.location}</td>
+                        <td>${job.postedBy?.name || 'Anonymous'}</td>
                         <td><span class="status ${job.status}">${job.status}</span></td>
                         <td>${new Date(job.createdAt).toLocaleDateString()}</td>
                         <td>
@@ -519,14 +523,29 @@ async function handleDonationSubmit(event) {
 async function handleJobSubmit(event) {
     event.preventDefault();
     
+    const salaryInput = document.getElementById('jobSalary').value;
+    let salary = undefined;
+    if (salaryInput) {
+        // Try to parse salary as min-max (e.g., '30000-50000' or '$30,000 - $50,000')
+        const match = salaryInput.replace(/[^0-9\-]/g, '').split('-');
+        if (match.length === 2) {
+            salary = { min: Number(match[0]), max: Number(match[1]) };
+        } else if (match.length === 1 && match[0]) {
+            salary = { min: Number(match[0]), max: Number(match[0]) };
+        }
+    }
+    const requirementsInput = document.getElementById('jobRequirements').value;
+    const requirements = requirementsInput ? requirementsInput.split(',').map(r => r.trim()).filter(Boolean) : [];
     const formData = {
         title: document.getElementById('jobTitle').value,
         description: document.getElementById('jobDescription').value,
-        salary: document.getElementById('jobSalary').value,
+        company: document.getElementById('jobCompany').value,
         location: document.getElementById('jobLocation').value,
-        postedBy: currentUser?._id,
+        employmentType: document.getElementById('jobEmploymentType').value,
+        requirements,
         status: 'active'
     };
+    if (salary) formData.salary = salary;
     
     try {
         const response = await fetch(`${API_BASE_URL}/jobs`, {
