@@ -9,7 +9,7 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "https://echotrack-backend.onrender.com/api/$1"
+      "dest": "https://echotrack-backend-0ty9.onrender.com/api/$1"
     },
     {
       "src": "/(.*)",

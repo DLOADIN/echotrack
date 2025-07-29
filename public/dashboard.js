@@ -1,7 +1,7 @@
 // Dashboard Configuration
 const API_BASE_URL = window.location.hostname === 'localhost' 
   ? 'http://localhost:5000/api' 
-  : 'https://echotrack-backend.onrender.com/api';
+  : 'https://echotrack-backend-0ty9.onrender.com/api';
 let currentUser = null;
 let currentView = 'overview';
 

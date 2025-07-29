@@ -49,7 +49,7 @@ You'll need these environment variables:
 4. **Deploy:**
    - Click "Create Web Service"
    - Wait for deployment to complete
-   - Note your service URL (e.g., `https://echotrack-backend.onrender.com`)
+   - Note your service URL (e.g., `https://echotrack-backend-0ty9.onrender.com`)
 
 ### Step 2: Deploy Frontend to Vercel
 
@@ -78,7 +78,7 @@ You'll need these environment variables:
 
 The code has been updated to automatically detect the environment:
 - **Local development:** Uses `http://localhost:5000/api`
-- **Production:** Uses `https://echotrack-backend.onrender.com/api`
+- **Production:** Uses `https://echotrack-backend-0ty9.onrender.com/api`
 
 ## Post-Deployment
 
