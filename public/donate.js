@@ -14,8 +14,12 @@ document.getElementById("donationForm").addEventListener("submit", async functio
   const result = document.getElementById("donationResult");
 
   try {
-    // Use full API URL
-    const response = await fetch("http://localhost:5000/api/donations", {
+    // Use environment-based API URL
+    const apiUrl = window.location.hostname === 'localhost' 
+      ? 'http://localhost:5000/api/donations'
+      : 'https://echotrack-backend.onrender.com/api/donations';
+    
+    const response = await fetch(apiUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

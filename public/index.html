@@ -379,10 +379,14 @@
         // Load statistics from API
         async function loadStats() {
             try {
+                const apiBase = window.location.hostname === 'localhost' 
+                    ? 'http://localhost:5000/api'
+                    : 'https://echotrack-backend.onrender.com/api';
+                
                 const [donationsRes, usersRes, jobsRes] = await Promise.all([
-                    fetch('http://localhost:5000/api/donations'),
-                    fetch('http://localhost:5000/api/users'),
-                    fetch('http://localhost:5000/api/jobs')
+                    fetch(`${apiBase}/donations`),
+                    fetch(`${apiBase}/users`),
+                    fetch(`${apiBase}/jobs`)
                 ]);
 
                 if (donationsRes.ok) {

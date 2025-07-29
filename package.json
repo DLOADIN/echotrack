@@ -6,9 +6,11 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "install-deps": "cd backend && npm install",
+    "install-deps": "npm install",
     "build": "echo 'No build step required'",
-    "deploy": "bash deploy.sh"
+    "deploy": "bash deploy.sh",
+    "vercel-build": "echo 'Frontend build completed'",
+    "render-build": "npm install"
   },
   "keywords": [
     "ngo",

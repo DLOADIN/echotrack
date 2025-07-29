@@ -1,206 +1,172 @@
-# 🚀 EchoTrack Deployment Guide
+# EchoTrack Deployment Guide
 
-This guide will help you deploy your NGO platform to various hosting services.
+## Overview
+This guide will help you deploy EchoTrack to:
+- **Frontend:** Vercel (Static files)
+- **Backend:** Render (Node.js API)
+- **Database:** MongoDB Atlas (Cloud database)
 
-## 📋 Prerequisites
+## Prerequisites
 
-1. **MongoDB Atlas Account** (for database)
-2. **GitHub Account** (for code repository)
-3. **Hosting Platform Account** (choose one below)
+### 1. MongoDB Atlas Setup
+1. Create a MongoDB Atlas account at https://cloud.mongodb.com
+2. Create a new cluster (free tier is fine)
+3. Create a database user with read/write permissions
+4. Get your connection string (MONGO_URI)
+5. Whitelist your IP addresses (0.0.0.0/0 for all IPs)
 
-## 🗄️ Database Setup (MongoDB Atlas)
+### 2. Environment Variables
+You'll need these environment variables:
 
-1. Go to [MongoDB Atlas](https://www.mongodb.com/atlas)
-2. Create a free account
-3. Create a new cluster
-4. Get your connection string
-5. Add it to your environment variables
+**For Render (Backend):**
+- `MONGO_URI`: Your MongoDB Atlas connection string
+- `JWT_SECRET`: A secure random string for JWT tokens
+- `NODE_ENV`: Set to "production"
+- `PORT`: Render will set this automatically
 
-## 🌐 Deployment Options
+## Deployment Steps
 
-### Option 1: Railway (Recommended - Easiest)
+### Step 1: Deploy Backend to Render
 
-**Steps:**
-1. Go to [railway.app](https://railway.app)
-2. Sign up with GitHub
-3. Click "New Project" → "Deploy from GitHub repo"
-4. Select your repository: `audreym101/echotrack`
-5. Add environment variables:
-   - `MONGO_URI`: Your MongoDB connection string
-   - `NODE_ENV`: `production`
-6. Deploy!
+1. **Connect your GitHub repository to Render:**
+   - Go to https://render.com
+   - Sign up/Login with GitHub
+   - Click "New +" → "Web Service"
+   - Connect your repository
 
-**Pros:** Free tier, automatic deployments, easy setup
-**Cons:** Limited free tier usage
-
-### Option 2: Render (Free Backend)
-
-**Steps:**
-1. Go to [render.com](https://render.com)
-2. Sign up with GitHub
-3. Click "New Web Service"
-4. Connect your GitHub repository
-5. Configure:
+2. **Configure the service:**
    - **Name:** `echotrack-backend`
    - **Environment:** `Node`
-   - **Root Directory:** `backend`
    - **Build Command:** `npm install`
    - **Start Command:** `node server.js`
-6. Add environment variables:
-   - `MONGO_URI`: Your MongoDB connection string
+   - **Root Directory:** Leave empty (root of repo)
+
+3. **Set Environment Variables:**
+   - `MONGO_URI`: Your MongoDB Atlas connection string
+   - `JWT_SECRET`: A secure random string (e.g., `your-super-secret-jwt-key-here`)
    - `NODE_ENV`: `production`
-7. Deploy!
 
-**Pros:** Free tier, reliable
-**Cons:** Separate frontend hosting needed
+4. **Deploy:**
+   - Click "Create Web Service"
+   - Wait for deployment to complete
+   - Note your service URL (e.g., `https://echotrack-backend.onrender.com`)
 
-### Option 3: Vercel (Frontend) + Render (Backend)
+### Step 2: Deploy Frontend to Vercel
 
-**Frontend (Vercel):**
-1. Go to [vercel.com](https://vercel.com)
-2. Sign up with GitHub
-3. Import your repository
-4. Deploy!
+1. **Connect your GitHub repository to Vercel:**
+   - Go to https://vercel.com
+   - Sign up/Login with GitHub
+   - Click "New Project"
+   - Import your repository
 
-**Backend (Render):**
-Follow Option 2 above, then update frontend API URLs.
+2. **Configure the project:**
+   - **Framework Preset:** Other
+   - **Root Directory:** Leave empty
+   - **Build Command:** Leave empty (no build needed)
+   - **Output Directory:** `public`
+   - **Install Command:** Leave empty
 
-### Option 4: Heroku (Classic)
+3. **Set Environment Variables:**
+   - No environment variables needed for frontend
 
-**Steps:**
-1. Install Heroku CLI: `npm install -g heroku`
-2. Login: `heroku login`
-3. Create app: `heroku create your-app-name`
-4. Add MongoDB addon: `heroku addons:create mongolab`
-5. Deploy: `git push heroku main`
-6. Open: `heroku open`
+4. **Deploy:**
+   - Click "Deploy"
+   - Wait for deployment to complete
+   - Note your domain (e.g., `https://echotrack.vercel.app`)
 
-**Pros:** Well-established, good documentation
-**Cons:** No free tier anymore
+### Step 3: Update API URLs
 
-## 🔧 Environment Variables
+The code has been updated to automatically detect the environment:
+- **Local development:** Uses `http://localhost:5000/api`
+- **Production:** Uses `https://echotrack-backend.onrender.com/api`
 
-Set these in your hosting platform:
+## Post-Deployment
 
-```env
-NODE_ENV=production
-MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/echotrack
-PORT=10000
-```
+### 1. Test Your Application
+1. Visit your Vercel frontend URL
+2. Test anonymous donations
+3. Test job postings
+4. Test user registration/login
 
-## 📱 Frontend Configuration
+### 2. Monitor Your Application
+- **Render Dashboard:** Monitor backend performance and logs
+- **Vercel Dashboard:** Monitor frontend performance
+- **MongoDB Atlas:** Monitor database usage
 
-After deploying your backend, update the API URLs in your frontend files:
+### 3. Custom Domains (Optional)
+- **Vercel:** Add custom domain in project settings
+- **Render:** Add custom domain in service settings
 
-**In `dashboard.js`, `login.js`, `signup.js`, and `index.html`:**
-```javascript
-// Replace this:
-const API_BASE_URL = 'http://localhost:5000/api';
-
-// With your deployed backend URL:
-const API_BASE_URL = 'https://your-backend-url.com/api';
-```
-
-## 🚀 Quick Deploy Commands
-
-### Railway
-```bash
-# Install Railway CLI
-npm install -g @railway/cli
-
-# Login and deploy
-railway login
-railway init
-railway up
-```
-
-### Render
-```bash
-# Just push to GitHub and connect in Render dashboard
-git add .
-git commit -m "Ready for deployment"
-git push origin main
-```
-
-### Vercel
-```bash
-# Install Vercel CLI
-npm install -g vercel
-
-# Deploy
-vercel
-```
-
-## 🔍 Testing Your Deployment
-
-1. **Check Backend Health:** Visit `https://your-backend-url.com/api/health`
-2. **Test Frontend:** Visit your frontend URL
-3. **Test API Endpoints:** Use Postman or browser to test `/api/users`, `/api/donations`, etc.
-
-## 🛠️ Troubleshooting
+## Troubleshooting
 
 ### Common Issues:
 
-1. **MongoDB Connection Failed**
-   - Check your `MONGO_URI` environment variable
-   - Ensure IP whitelist includes `0.0.0.0/0`
+1. **CORS Errors:**
+   - Ensure CORS is properly configured in server.js
+   - Check that your Vercel domain is in the allowed origins
 
-2. **CORS Errors**
-   - Backend already has CORS configured
-   - Check if frontend URL is correct
+2. **MongoDB Connection Issues:**
+   - Verify your MONGO_URI is correct
+   - Check that your IP is whitelisted in MongoDB Atlas
+   - Ensure your database user has proper permissions
 
-3. **Port Issues**
-   - Most platforms use `process.env.PORT`
-   - Backend is already configured for this
+3. **API 404 Errors:**
+   - Verify your Render service is running
+   - Check that the API_BASE_URL is correct in your frontend code
 
-4. **Build Failures**
-   - Check `package.json` has correct scripts
-   - Ensure all dependencies are in `dependencies` (not `devDependencies`)
+4. **Environment Variables:**
+   - Ensure all required environment variables are set in Render
+   - Check that JWT_SECRET is set for authentication
 
-## 📊 Monitoring
+## File Structure for Deployment
 
-After deployment, monitor:
-- **Uptime:** Use platform's built-in monitoring
-- **Logs:** Check application logs for errors
-- **Performance:** Monitor response times
-- **Database:** Check MongoDB Atlas dashboard
+```
+echotrack/
+├── public/                 # Frontend files (Vercel)
+│   ├── index.html
+│   ├── dashboard.html
+│   ├── donate.html
+│   ├── login.html
+│   └── *.js, *.css
+├── server.js              # Backend entry point (Render)
+├── routes/                # API routes
+├── models/                # Database models
+├── middleware/            # Auth middleware
+├── package.json           # Dependencies
+├── vercel.json           # Vercel configuration
+├── render.yaml           # Render configuration
+└── .env                  # Local environment variables
+```
 
-## 🔄 Continuous Deployment
+## Environment Variables Reference
 
-Most platforms automatically deploy when you push to GitHub:
-1. Make changes locally
-2. Commit and push to GitHub
-3. Platform automatically redeploys
+### Required for Production:
+- `MONGO_URI`: MongoDB Atlas connection string
+- `JWT_SECRET`: Secret key for JWT tokens
+- `NODE_ENV`: Set to "production"
 
-## 💰 Cost Estimation
+### Optional:
+- `PORT`: Server port (Render sets this automatically)
 
-**Free Tiers:**
-- Railway: $5/month after free tier
-- Render: Free tier available
-- Vercel: Free tier available
-- Heroku: No free tier
+## Security Considerations
 
-**Recommended for Start:**
-- Railway or Render (both have good free tiers)
+1. **Environment Variables:** Never commit sensitive data to Git
+2. **CORS:** Properly configured for production domains
+3. **JWT Secret:** Use a strong, random secret
+4. **MongoDB:** Use strong passwords and proper user permissions
+5. **HTTPS:** Both Vercel and Render provide HTTPS by default
 
-## 🎯 Next Steps
+## Performance Optimization
 
-1. **Choose a platform** from the options above
-2. **Set up MongoDB Atlas** database
-3. **Deploy backend** first
-4. **Update frontend** API URLs
-5. **Deploy frontend** (if separate)
-6. **Test everything** thoroughly
-7. **Share your live URL!**
+1. **Database:** Use MongoDB Atlas indexes for better performance
+2. **Caching:** Consider adding Redis for session management
+3. **CDN:** Vercel provides global CDN automatically
+4. **Monitoring:** Set up alerts for errors and performance issues
 
-## 📞 Support
+## Support
 
 If you encounter issues:
-1. Check platform documentation
-2. Review error logs
-3. Test locally first
-4. Contact platform support
-
----
-
-**Your NGO platform will be live and accessible worldwide! 🌍** 
+1. Check the logs in Render dashboard
+2. Verify environment variables are set correctly
+3. Test API endpoints directly using tools like Postman
+4. Check MongoDB Atlas for connection issues 

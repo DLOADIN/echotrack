@@ -12,8 +12,17 @@ const auth = require('./middleware/auth');
 
 const app = express();
 
+// CORS configuration for production
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://echotrack.vercel.app', 'https://echotrack-frontend.vercel.app']
+    : ['http://localhost:3000', 'http://localhost:5000'],
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -55,7 +64,8 @@ app.use('/api/donations', donationRoutes);
 app.get('/api/health', (req, res) => {
     res.json({
         status: 'ok',
-        mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
+        mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
+        environment: process.env.NODE_ENV || 'development'
     });
 });
 
@@ -77,9 +87,9 @@ app.use('*', (req, res) => {
 });
 
 // Start server
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-    console.log(`🚀 Server is live!`);
-
+    console.log(`🚀 Server is live on port ${PORT}!`);
+    console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
 });
 
