@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Donate Items</title>
+  <link rel="stylesheet" href="donate.css" />
+</head>
+<body>
+  <div class="container">
+    <h2>Donate Textile Items</h2>
+    <form id="donationForm">
+      <input type="text" id="name" placeholder="Your Name" required />
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="text" id="item" placeholder="Item to Donate" required />
+      <input type="number" id="amount" placeholder="Amount (optional)" min="0" step="any" />
+      <select id="currency">
+        <option value="USD">USD</option>
+        <option value="EUR">EUR</option>
+        <option value="GBP">GBP</option>
+        <option value="INR">INR</option>
+        <option value="">Other/None</option>
+      </select>
+      <select id="paymentMethod" required>
+        <option value="credit_card">Credit Card</option>
+        <option value="bank_transfer">Bank Transfer</option>
+        <option value="paypal">PayPal</option>
+        <option value="crypto">Crypto</option>
+      </select>
+      <textarea id="description" placeholder="Description of Item" rows="4"></textarea>
+      <button type="submit">Submit Donation</button>
+    </form>
+    <p id="donationResult"></p>
+  </div>
+  <script>
+    if (!localStorage.getItem('token')) {
+      window.location.href = 'login.html';
+    }
+  </script>
+  <script src="donate.js"></script>
+</body>
+</html>
