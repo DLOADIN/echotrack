@@ -5,6 +5,13 @@ const API_BASE_URL = window.location.hostname === 'localhost'
 let currentUser = null;
 let currentView = 'overview';
 
+// Check if user just logged in
+const justLoggedIn = sessionStorage.getItem('justLoggedIn');
+if (justLoggedIn) {
+    sessionStorage.removeItem('justLoggedIn');
+    console.log('User just logged in, skipping initial auth check');
+}
+
 // Initialize Dashboard
 document.addEventListener('DOMContentLoaded', function() {
     initializeDashboard();
@@ -16,12 +23,32 @@ document.addEventListener('DOMContentLoaded', function() {
 function initializeDashboard() {
     // Check if user is logged in
     const token = localStorage.getItem('token');
-    if (!token) {
+    const userData = localStorage.getItem('userData');
+    const justLoggedIn = sessionStorage.getItem('justLoggedIn');
+    
+    if (!token && !justLoggedIn) {
+        console.log('No token found, redirecting to login');
         window.location.href = 'login.html';
         return;
     }
+    
+    // Clear the session flag if it exists
+    if (justLoggedIn) {
+        sessionStorage.removeItem('justLoggedIn');
+        console.log('User just logged in, proceeding with dashboard');
+    }
+    
+    // Try to parse user data if available
+    if (userData) {
+        try {
+            currentUser = JSON.parse(userData);
+            updateUserInterface();
+        } catch (error) {
+            console.error('Error parsing user data:', error);
+        }
+    }
 
-    // Load user data
+    // Load user data from server
     loadUserData();
     
     // Setup navigation
@@ -65,23 +92,42 @@ function setupEventListeners() {
 async function loadUserData() {
     try {
         showLoading();
+        const token = localStorage.getItem('token');
+        
+        if (!token) {
+            console.log('No token available for user data fetch');
+            logout();
+            return;
+        }
+        
         const response = await fetch(`${API_BASE_URL}/users/me`, {
             headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                'Authorization': `Bearer ${token}`
             }
         });
+        
         if (response.ok) {
             const user = await response.json();
             currentUser = user;
             updateUserInterface();
-        } else {
-            // Token invalid or expired, force logout
+            console.log('User data loaded successfully:', user.name);
+        } else if (response.status === 401) {
+            // Token is invalid, clear storage and redirect
+            console.log('Token is invalid, logging out');
             logout();
+        } else {
+            console.error('Failed to load user data:', response.status);
+            // Don't logout on other errors, just show notification
+            showNotification('Error loading user data', 'error');
         }
     } catch (error) {
         console.error('Error loading user data:', error);
-        showNotification('Error loading user data', 'error');
-        logout();
+        // Only logout on network errors, not on other errors
+        if (error.name === 'TypeError' && error.message.includes('fetch')) {
+            showNotification('Network error loading user data', 'error');
+        } else {
+            showNotification('Error loading user data', 'error');
+        }
     } finally {
         hideLoading();
     }

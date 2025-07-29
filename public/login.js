@@ -30,8 +30,19 @@ document.getElementById("loginForm").addEventListener("submit", async function (
     // Save JWT token and user info
     localStorage.setItem("token", data.token);
     localStorage.setItem("userData", JSON.stringify(data.user));
+    
+    // Set session flag to indicate successful login
+    sessionStorage.setItem("justLoggedIn", "true");
+    
+    // Show success message
     alert("Login successful!");
-    window.location.href = "dashboard.html";
+    
+    // Add a small delay to ensure localStorage is updated
+    setTimeout(() => {
+      // Redirect to dashboard
+      window.location.href = "dashboard.html";
+    }, 100);
+    
   } catch (error) {
     console.error("Error logging in:", error);
     alert("Something went wrong. Try again later.");
