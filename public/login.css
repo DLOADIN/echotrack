@@ -18,6 +18,31 @@ body {
   border-radius: 8px;
   width: 300px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  position: relative;
+}
+
+.back-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+}
+
+.back-link a {
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: opacity 0.3s;
+}
+
+.back-link a:hover {
+  opacity: 0.8;
+}
+
+.back-link i {
+  font-size: 12px;
 }
 
 h2 {
@@ -42,6 +67,33 @@ input {
   border-radius: 4px;
   margin-bottom: 12px;
   font-size: 14px;
+}
+
+.password-input-container {
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.password-input-container input {
+  width: 100%;
+  margin-bottom: 0;
+  padding-right: 35px;
+  box-sizing: border-box;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #666;
+  font-size: 14px;
+  transition: color 0.3s;
+}
+
+.password-toggle:hover {
+  color: #333;
 }
 
 button {

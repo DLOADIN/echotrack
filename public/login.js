@@ -48,3 +48,20 @@ document.getElementById("loginForm").addEventListener("submit", async function (
     alert("Something went wrong. Try again later.");
   }
 });
+
+// Password toggle functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const passwordToggle = document.getElementById('passwordToggle');
+  const passwordInput = document.getElementById('password');
+  
+  if (passwordToggle && passwordInput) {
+    passwordToggle.addEventListener('click', function() {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      
+      // Toggle eye icon
+      this.classList.toggle('fa-eye');
+      this.classList.toggle('fa-eye-slash');
+    });
+  }
+});
